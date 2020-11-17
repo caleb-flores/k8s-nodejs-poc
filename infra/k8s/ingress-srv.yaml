@@ -1,0 +1,46 @@
+# https://kubernetes.io/docs/concepts/services-networking/ingress/#name-based-virtual-hosting
+
+  # For example, the following Ingress routes traffic requested for first.bar.com to service1,
+  # second.foo.com to service2, and any traffic to the IP address without a hostname defined in request
+  # (that is, without a request header being presented) to service3.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: posts-ingress
+  annotations:
+      nginx.ingress.kubernetes.io/use-regex: 'true'
+      kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: posts.com
+    http:
+      paths:
+      - path: /posts/create
+        pathType: Exact
+        backend:
+          service: 
+            name: posts-srv
+            port: 
+              number: 4000
+      - path: /posts
+        pathType: Exact
+        backend:
+          service:
+            name: query-srv
+            port:
+              number: 4002
+      - path: /posts/?(.*)/comments
+        pathType: Exact
+        backend:
+          service: 
+            name: comments-srv
+            port: 
+              number: 4001
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: client-srv
+            port: 
+              number: 3000        

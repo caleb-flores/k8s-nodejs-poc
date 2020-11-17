@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  query-deployment
+  name:  client-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: query
+      app: client
   template:
     metadata:
       labels:
-        app: query
+        app: client
     spec:
       containers:
-        - image:  calebflores/query
-          name: query
+        - image:  calebflores/client
+          name: client
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: query-srv
+  name: client-srv
 spec:
     type: ClusterIP
     selector:
-      app: query
+      app: client
     ports:
-        - name: query
+        - name: client
           protocol: TCP
-          port: 4002
-          targetPort: 4002
+          port: 3000
+          targetPort: 3000
